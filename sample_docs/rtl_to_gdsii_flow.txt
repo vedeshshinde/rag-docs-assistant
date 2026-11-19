@@ -1,0 +1,32 @@
+The RTL-to-GDSII Digital Design Flow
+
+Building a digital chip starts from a functional description and ends with a manufacturing
+file, and the sequence of steps in between is called the RTL-to-GDSII flow. RTL (register
+transfer level) is a hardware description written in a language like Verilog or VHDL that
+describes what the circuit should do in terms of registers and the logic between them.
+GDSII is the final geometric file format handed to a semiconductor fab, describing the
+exact shapes to be manufactured on each layer of the chip.
+
+The flow generally proceeds through these stages. First, RTL design and verification:
+engineers write RTL and confirm its functional correctness through simulation and, for
+critical blocks, formal verification. Second, logic synthesis: a synthesis tool translates
+the RTL into a gate-level netlist made of standard cells from a specific manufacturing
+library, optimizing for area, power, and timing. Third, place and route: the netlist is
+given physical locations and wire connections on the die, as described in the placement
+and routing process. Fourth, static timing analysis and power analysis: the physical
+design is checked against timing and power targets across all operating corners, often
+requiring several iterations back into placement or synthesis to fix violations. Fifth,
+physical verification: design rule checking (DRC) confirms the layout obeys the
+manufacturing process's geometric rules, and layout-versus-schematic (LVS) checking
+confirms the physical layout still matches the original netlist. Finally, tapeout: the
+verified GDSII file is signed off and sent to the fab.
+
+EDA (electronic design automation) teams build and maintain the internal tools, scripts,
+and methodologies that automate and connect these stages, since commercial EDA vendor
+tools (used for synthesis, P&R, STA, DRC/LVS) need process-specific configuration,
+in-house scripting, and automation to run efficiently across a company's specific chip
+designs and manufacturing nodes. A large part of this work involves data: parsing and
+cleaning reports produced at each flow stage (timing reports, DRC violation reports,
+power reports), tracking metrics across design iterations, and increasingly, applying
+machine learning to predict problems (like timing violations or routing congestion)
+earlier in the flow, before the expensive downstream stages are run.

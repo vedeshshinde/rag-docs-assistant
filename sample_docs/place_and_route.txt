@@ -1,0 +1,31 @@
+Standard Cell Placement and Routing
+
+After a chip's logic has been synthesized into a netlist of standard cells (small,
+pre-designed logic blocks like AND gates, flip-flops, and multiplexers), that netlist must
+be physically arranged on the silicon die. This is done in two major stages: placement and
+routing, together often called place-and-route (P&R).
+
+Placement decides the physical x/y location of every standard cell on the chip. A good
+placement minimizes total wirelength, reduces congestion in any one area, and keeps
+timing-critical cells close together so signals do not have to travel far. Placement is
+formulated as a large-scale optimization problem: with millions of cells, exhaustive
+search is impossible, so tools use techniques like analytical placement (treating cells
+and their connections as a system of springs to be minimized), followed by legalization
+(snapping cells onto a manufacturable row-based grid) and detailed placement (local
+swaps to fix remaining congestion or timing issues).
+
+Routing then decides the exact metal wire paths that connect the pins of placed cells,
+using the multiple metal layers available in the manufacturing process. Global routing
+first assigns each connection (net) to a coarse region of the chip to balance congestion,
+and detailed routing then computes exact wire geometry on each layer while obeying design
+rules (minimum spacing, minimum width, via placement rules, etc). Both routing stages are
+graph problems at their core: a net with more than two pins is modeled as a Steiner tree
+problem on a grid graph, and detailed routing is frequently solved with maze-routing
+algorithms that are variants of shortest-path search (similar in spirit to Dijkstra's
+algorithm or A*) run over a grid representing available routing tracks.
+
+Placement and routing quality directly affects whether the design will pass static timing
+analysis, since wire length and layer choice both add delay to a signal's path. This is
+why P&R and STA are run iteratively: a design is placed and routed, timed, and then
+selectively re-placed or re-routed to fix any paths with negative slack, in a loop that
+continues until the design closes timing across all corners.

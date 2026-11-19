@@ -1,0 +1,34 @@
+Static Timing Analysis (STA)
+
+Static timing analysis is a method used in digital circuit design to verify that a chip
+will operate correctly at its target clock frequency, without needing to simulate every
+possible input pattern. Instead of running functional simulations, STA examines every
+timing path in the design mathematically and checks whether signals arrive within the
+required time window.
+
+A timing path begins at a startpoint (typically a flip-flop output or an input port) and
+ends at an endpoint (a flip-flop input or an output port). For each path, STA computes
+two numbers: the arrival time, which is how long a signal actually takes to propagate
+through the logic and wires along the path, and the required time, which is the deadline
+by which the signal must arrive for the circuit to function correctly at the target clock
+period. The difference between the required time and the arrival time is called slack.
+Positive slack means the path meets timing; negative slack means the path is too slow and
+will cause incorrect behavior at that clock speed.
+
+STA checks two main types of constraints. Setup checks ensure a signal arrives early
+enough before the next clock edge so the receiving flip-flop can capture it correctly.
+Hold checks ensure a signal does not arrive too early, which would cause the receiving
+flip-flop to capture the wrong (new) value instead of the intended (old) one. Both checks
+must pass across all paths, under multiple process, voltage, and temperature (PVT)
+corners, since manufacturing variation and operating conditions change how fast
+transistors and wires actually behave.
+
+Because a modern chip can have millions of timing paths, STA tools rely on graph-based
+algorithms to make this tractable. The design is represented as a timing graph, where
+nodes are pins on gates and edges are the delays through gates and wires. Finding the
+worst-case (critical) path is essentially a longest-path problem on a directed acyclic
+graph, which can be solved efficiently using topological traversal rather than exhaustively
+enumerating every path. This is one of the main reasons graph algorithms are foundational
+in EDA tooling: nearly every stage of the chip design flow (timing, placement, routing,
+power analysis) is ultimately expressed as a graph traversal or optimization problem over
+a netlist graph.

@@ -1,0 +1,11 @@
+# Python cache and virtual environments
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# Local secrets
+.env
+
+# Generated vector database and model artifacts
+chroma_db/

@@ -1,0 +1,5 @@
+chromadb
+anthropic
+pypdf
+scikit-learn
+sentence-transformers
